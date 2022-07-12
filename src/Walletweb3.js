@@ -123,19 +123,21 @@ function Walletweb3() {
     } 
     if(select==="Token")
   { 
-    console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",contract2);
     try {
-      console.log("senderAddress",senderAddress,"amount",amount*10**18,"addresss[0] ",addresss[0] );
-     const result = await web3.contract2.methods.transfer(senderAddress,amount*10**18)
+      console.log("senderAddress",senderAddress,"amount",amount,"addresss[0] ",addresss[0] );
+      let ss = amount*10**18;
+      console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",ss.toString());
+
+     
+
+     const result = await contract2.methods.transfer(senderAddress,ss.toString() )
       .send({ from:  addresss[0] })
       .then((res) => {
-        console.log(res.blockHash, "res");
+        console.log(res, "res");
         setHash(res.blockHash);
       });
-
-      
     } catch (error) {
-      
+      console.log("error",error);
     }
   }
   }
