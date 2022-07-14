@@ -67,6 +67,7 @@ export const Wallet = () => {
 
 
 	const connectWalletHandler = () => {
+		
 		if (window.ethereum && window.ethereum.isMetaMask) {
 
 			window.ethereum.request({ method: 'eth_requestAccounts'})
