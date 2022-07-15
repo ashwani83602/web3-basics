@@ -34,7 +34,9 @@ function Walletfun() {
  
   const connectMetamask = async () => {
     const TokenAddress = "0x995765e120676263764aB14781Abe228a7EDd015";
-    const TokenAddress1 = "0x554BBA98843b661dD2Eda9B750BA4559f23e2E45";
+    // const TokenAddress1 = "0x554BBA98843b661dD2Eda9B750BA4559f23e2E45";
+     const TokenAddress1 = "0xB8B1fF9d62eb8dcbB98bC7B8D006b8f5F873f5a3";
+
     console.log("window", window);
 
     //   if(network=='')
@@ -137,7 +139,7 @@ function Walletfun() {
       const { ethereum } = window;
       web3 = new Web3(ethereum);
       console.log("amount*10**18", amount * 10 ** 18);
-      if (select === "Ehtereum") {
+      if (select === "Ethereum") {
         console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
         try {
           await web3.eth
@@ -187,7 +189,12 @@ const fromTo = async () =>{
     console.log(ss);
     if (select === "Token") {
 
-    await contract2.methods.transferFrom(from,to,ss.toString()).send({ from: from }).then(console.log("result"))
+    await contract2.methods.transferFrom(from,to,ss.toString()).send({ from: address }).then((result)=>{
+      setHash(result.blockHash)
+    })
+    }
+    else if(select === "Ethereum"){
+      alert("you can send only Token in Transfer From ")
     }
 
 }
@@ -232,44 +239,78 @@ console.log(approve,aa);
             <th>Token Balance</th>
             <td>{balance2}</td>
           </tr>
-        </table>
-        
-        <form>
-          <select name="Transfer" onChange={(e) => setSelect(e.target.value)}>
+        </table><br></br><br></br><br></br>
+        <select name="Transfer" onChange={(e) => setSelect(e.target.value)}>
             <option value="">select</option>
-            <option value="Ehtereum">Ehtereum</option>
+            <option value="Ethereum">Ethereum</option>
             <option value="Token">Token</option>
           </select>
-          <br></br>
-          <br></br>
-          <label> address</label>
-          <input
+          <br></br><br></br>
+        <div class="row">
+    <div class="col-sm-4">
+      <h3>Transfer </h3>
+      <form>
+         
+         <br></br>
+         <br></br>
+         <label> address</label>
+         <input
+           type="text"
+           placeholder="enter address"
+           value={senderAddress}
+           onChange={(e) => setSenderAddress(e.target.value)}
+         />
+         <br></br>
+         <br></br>
+         <br></br>
+         <label>Amount</label>
+
+         <input
+           type="number"
+           value={amount}
+           onChange={(e) => setAmount(e.target.value)}
+         />
+         <br></br>
+         <br></br>
+
+         <button type="button" onClick={(e) => transferMoney(e)}>
+           send
+         </button>
+       </form>
+    </div>
+   
+    <div class="col-sm-4">
+      <h3>Transfer From</h3> <br></br><br></br>       
+          
+    From Address
+            <input
             type="text"
             placeholder="enter address"
-            value={senderAddress}
-            onChange={(e) => setSenderAddress(e.target.value)}
-          />
-          <br></br>
-          <br></br>
-          <br></br>
-          <label>Amount</label>
-
-          <input
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+          /><br></br><br></br>
+           To Address <nsbp/><nsbp/><nsbp/><nsbp/><nsbp></nsbp>
+            <input
+            type="text"
+            placeholder="enter address"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+          /><br></br><br></br>
+           Amount
+            <input
             type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
+            placeholder="Amount"
+            value={fromamount}
+            onChange={(e) => setFromamount(e.target.value)}
+          /><br></br>
           <br></br>
+          <button onClick={fromTo}>Send From </button>
           <br></br>
 
-          <button type="button" onClick={(e) => transferMoney(e)}>
-            send
-          </button>
-        </form>
-        <h3>hash Address: {hash}</h3>
-        <br></br>
-        <br></br>
-        <h2>Approve who will you use your wallet</h2>
+    </div>
+    <div class="col-sm-4">
+     
+      <h3>Approve who will you use your wallet</h3><br></br><br></br>
         Approvel Address<input
             type="text"
             placeholder="enter address"
@@ -285,32 +326,17 @@ console.log(approve,aa);
         /><br></br>
         <br></br>
         <button onClick={approveFun}>Approve</button>
+     
+    </div>
+  </div>
+  
+       
+       
+        <br></br>
+        <br></br>
+        
       </div><br></br><br></br>
-      
-    From Address
-            <input
-            type="text"
-            placeholder="enter address"
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
-          />
-           To Address
-            <input
-            type="text"
-            placeholder="enter address"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-          />
-           Amount
-            <input
-            type="text"
-            placeholder="Amount"
-            value={fromamount}
-            onChange={(e) => setFromamount(e.target.value)}
-          /><br></br>
-          <br></br>
-          <button onClick={fromTo}>Send </button>
-          <br></br>
+            <h3>hash Address: {hash}</h3>
       
     </div>
   );
