@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from "react";
 import Web3 from "web3";
+import { useEthers } from "@usedapp/core";
+import Web3Modal from "web3"
 import TokenAbi from "../src/ABI/Token_Abi.json";
 import TokenAbi2 from "../src/ABI/Token_Ab2.json";
+
 function Walletfun() {
+  const {  deactivate } = useEthers();
   let web3;
   let changeNetwork;
   const { ethereum } = window;
   web3 = new Web3(ethereum);
+  const web3Modal = new Web3Modal
+  console.log("mmmmmmmhhhhhhhhhhhhhhhhhhhhhhhhhhh",web3Modal);
+
+
+  // console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",web3.eth.currentProvider);
 
   const [balance, setBalance] = useState("");
   const [connect, setConnect] = useState("connect");
+  const [disconnect, setDisConnect] = useState("disconnect");
+
   let [balance2, setBalance2] = useState("");
   const [select, setSelect] = useState("");
   const [senderAddress, setSenderAddress] = useState("");
@@ -61,23 +72,29 @@ function Walletfun() {
 
       setAddress(addresss[0]);
       setConnect("Wallet Connected");
-      console.log("adddddddddddddddddd", address);
+      console.log("adddddddddddddddddd", address, ethereum.chainId);
 
-      if (ethereum.chainId == "0x1" || ethereum.chainId == "0x3") {
-        
+      if (
+        ethereum.chainId == "0x1" ||
+        ethereum.chainId == "0x3" ||
+        ethereum.chainId == "0x38"
+      ) {
         if (ethereum.chainId === "0x1") {
           setNetwork("Mainnet");
         } else if (ethereum.chainId == "0x3") {
-          setNetwork("Ropsten Test Network")
+          setNetwork("Ropsten Test Network");
+        }
+        else if(ethereum.chainId == "0x38"){
+          console.log("BSC test nret");
+          setNetwork("Bsc Test Network");
         }
         const balance1 = await web3.eth.getBalance(addresss[0]);
         console.log("balance1", balance1 / 10 ** 18);
         setBalance(balance1 / 10 ** 18);
-      }
-       else {
-       if(ethereum.chainId =='0x2a') setNetwork('Kova Test Network')
-       if(ethereum.chainId =='0x4') setNetwork('Rinkyby Test Network')
-        setBalance('0')
+      } else {
+        if (ethereum.chainId == "0x2a") setNetwork("Kova Test Network");
+        if (ethereum.chainId == "0x4") setNetwork("Rinkyby Test Network");
+        setBalance("0");
       }
     
 
@@ -103,6 +120,16 @@ function Walletfun() {
       alert("please install metamask");
     }
   };
+  const handler = (connectInfo) => {
+    console.log("connectInfoconnectInfo",connectInfo);
+
+  }
+  const disconnectMetamask = () => {
+
+    window.location.reload()
+    
+
+  }
   const changeNetwork1 = async () =>{
     await window.ethereum
       .request({
@@ -213,18 +240,28 @@ console.log(approve,aa);
 
       <div>
         <button onClick={connectMetamask}>{connect}</button> <nsbp></nsbp>
-        
+        {connect == "Wallet Connected" ? (
+          <button onClick={disconnectMetamask}>{disconnect}</button>
+        ) : (
+          ""
+        )}
         <br></br>
         <br></br>
-        
         <table
           style={{ textAlign: "left", marginLeft: "auto", marginRight: "auto" }}
         >
           <tr>
             <th>Network</th>
-            <td>{connect=="Wallet Connected"?
-               network== "Mainnet"|| network=="Ropsten Test Network"? network:<button onClick={changeNetwork1}>change network</button>
-                :'' }
+            <td>
+              {connect == "Wallet Connected" ? (
+                network == "Mainnet" || network == "Bsc Test Network" ? (
+                  network
+                ) : (
+                  <button onClick={changeNetwork1}>change network</button>
+                )
+              ) : (
+                ""
+              )}
             </td>
           </tr>
           <tr>
@@ -239,105 +276,117 @@ console.log(approve,aa);
             <th>Token Balance</th>
             <td>{balance2}</td>
           </tr>
-        </table><br></br><br></br><br></br>
+        </table>
+        <br></br>
+        <br></br>
+        <br></br>
         <select name="Transfer" onChange={(e) => setSelect(e.target.value)}>
-            <option value="">select</option>
-            <option value="Ethereum">Ethereum</option>
-            <option value="Token">Token</option>
-          </select>
-          <br></br><br></br>
+          <option value="">select</option>
+          <option value="Ethereum">Ethereum</option>
+          <option value="Token">Token</option>
+        </select>
+        <br></br>
+        <br></br>
         <div class="row">
-    <div class="col-sm-4">
-      <h3>Transfer </h3>
-      <form>
-         
-         <br></br>
-         <br></br>
-         <label> address</label>
-         <input
-           type="text"
-           placeholder="enter address"
-           value={senderAddress}
-           onChange={(e) => setSenderAddress(e.target.value)}
-         />
-         <br></br>
-         <br></br>
-         <br></br>
-         <label>Amount</label>
+          <div class="col-sm-4">
+            <h3>Transfer </h3>
+            <form>
+              <br></br>
+              <br></br>
+              <label> address</label>
+              <input
+                type="text"
+                placeholder="enter address"
+                value={senderAddress}
+                onChange={(e) => setSenderAddress(e.target.value)}
+              />
+              <br></br>
+              <br></br>
+              <br></br>
+              <label>Amount</label>
 
-         <input
-           type="number"
-           value={amount}
-           onChange={(e) => setAmount(e.target.value)}
-         />
-         <br></br>
-         <br></br>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
+              <br></br>
+              <br></br>
 
-         <button type="button" onClick={(e) => transferMoney(e)}>
-           send
-         </button>
-       </form>
-    </div>
-   
-    <div class="col-sm-4">
-      <h3>Transfer From</h3> <br></br><br></br>       
-          
-    From Address
-            <input
-            type="text"
-            placeholder="enter address"
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
-          /><br></br><br></br>
-           To Address <nsbp/><nsbp/><nsbp/><nsbp/><nsbp></nsbp>
-            <input
-            type="text"
-            placeholder="enter address"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-          /><br></br><br></br>
-           Amount
-            <input
-            type="number"
-            placeholder="Amount"
-            value={fromamount}
-            onChange={(e) => setFromamount(e.target.value)}
-          /><br></br>
-          <br></br>
-          <button onClick={fromTo}>Send From </button>
-          <br></br>
+              <button type="button" onClick={(e) => transferMoney(e)}>
+                send
+              </button>
+            </form>
+          </div>
 
-    </div>
-    <div class="col-sm-4">
-     
-      <h3>Approve who will you use your wallet</h3><br></br><br></br>
-        Approvel Address<input
-            type="text"
-            placeholder="enter address"
-            value={approve}
-            onChange={(e) => setApprove(e.target.value)}
-        /><br></br>
+          <div class="col-sm-4">
+            <h3>Transfer From</h3> <br></br>
+            <br></br>
+            From Address
+            <input
+              type="text"
+              placeholder="enter address"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+            />
+            <br></br>
+            <br></br>
+            To Address <nsbp />
+            <nsbp />
+            <nsbp />
+            <nsbp />
+            <nsbp></nsbp>
+            <input
+              type="text"
+              placeholder="enter address"
+              value={to}
+              onChange={(e) => setTo(e.target.value)}
+            />
+            <br></br>
+            <br></br>
+            Amount
+            <input
+              type="number"
+              placeholder="Amount"
+              value={fromamount}
+              onChange={(e) => setFromamount(e.target.value)}
+            />
+            <br></br>
+            <br></br>
+            <button onClick={fromTo}>Send From </button>
+            <br></br>
+          </div>
+          <div class="col-sm-4">
+            <h3>Approve who will you use your wallet</h3>
+            <br></br>
+            <br></br>
+            Approvel Address
+            <input
+              type="text"
+              placeholder="enter address"
+              value={approve}
+              onChange={(e) => setApprove(e.target.value)}
+            />
+            <br></br>
+            <br></br>
+            Approvel Amount
+            <input
+              type="text"
+              placeholder="enter address"
+              value={approveAmount}
+              onChange={(e) => setApproveAmount(e.target.value)}
+            />
+            <br></br>
+            <br></br>
+            <button onClick={approveFun}>Approve</button>
+          </div>
+        </div>
         <br></br>
-         Approvel Amount<input
-            type="text"
-            placeholder="enter address"
-            value={approveAmount}
-            onChange={(e) => setApproveAmount(e.target.value)}
-        /><br></br>
         <br></br>
-        <button onClick={approveFun}>Approve</button>
-     
-    </div>
-  </div>
-  
-       
-       
-        <br></br>
-        <br></br>
-        
-      </div><br></br><br></br>
-            <h3>hash Address: {hash}</h3>
-      
+      </div>
+      <br></br>
+      <br></br>
+      <h3>hash Address: {hash}</h3>
     </div>
   );
 }

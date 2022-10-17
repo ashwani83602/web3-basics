@@ -4,6 +4,9 @@ import { Wallet } from '../src/Wallet';
 import Walletweb3 from './Walletweb3';
 import NewWallet from './NewWallet';
 import Walletfun from './Walletfun';
+import UsingEther from './UsingEther';
+import BinanceWallet from './BinanceWallet';
+import Biconomywallet from './Biconomywallet';
 
 
 
@@ -13,7 +16,11 @@ function App() {
     {/* <Wallet /> */}
     {/* <Walletweb3 /> */}
     {/* <NewWallet /> */}
-    <Walletfun />
+    {/* <Walletfun /> */}
+    {/* <UsingEther /> */}
+    {/* <BinanceWallet /> */}
+    {/* <Biconomywallet /> */}
+
     
     </div>
   );
