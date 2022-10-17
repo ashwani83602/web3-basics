@@ -16,7 +16,7 @@ function App() {
     {/* <Wallet /> */}
     {/* <Walletweb3 /> */}
     {/* <NewWallet /> */}
-    {/* <Walletfun /> */}
+    <Walletfun />
     {/* <UsingEther /> */}
     {/* <BinanceWallet /> */}
     {/* <Biconomywallet /> */}
